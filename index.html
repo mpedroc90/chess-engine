@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Document</title>
+</head>
+<body>
+   
+<canvas id="myCanvas"  style="border: solid 1px black;"> 
+
+</canvas>
+
+<div>
+    <lable> FEN </lable><input id="text"  type="text"/> <button onclick="draw()">  Draw</button>
+</div>
+
+</body>
+
+    <script src="./dist/index.js"  ></script>
+    
+    
+    <script>
+
+    // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
+       const DIMENSION = 8; 
+       const CELL_SIZE = 100; 
+       const canvas = document.getElementById("myCanvas");  
+       const ctx = canvas.getContext("2d")
+      
+       function drawBoard(canvas) {
+            canvas.width = DIMENSION*CELL_SIZE;
+            canvas.height = DIMENSION*CELL_SIZE;
+         
+
+            for(let i = 0; i<DIMENSION ; i++)
+                for(let j = 0; j<DIMENSION ; j++) {
+                    ctx.fillStyle = (i + j) % 2 == 0 ? "white" : "green";
+                    ctx.fillRect(i*CELL_SIZE, j*CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                }
+       }
+
+       function drawPieces(canvas, fen) {
+         let r = 0 ;
+         let c = 0 ;
+         for(let i = 0; i<fen.length ; i++) {
+            if(fen[i] >= '1' && fen[i] <= '9' ) {
+                r += (fen[i] - '0');
+            }
+            else if(fen[i] === '/') {
+                c++;
+                r=0;
+            }
+            else if(fen[i] >= 'a' && fen[i]<='z' ) {
+               
+               
+                const img = new Image();
+                const x = r; 
+                const y = c;
+                img.onload = function() {
+                    ctx.drawImage(img, x*CELL_SIZE, y* CELL_SIZE , CELL_SIZE, CELL_SIZE);
+                }   
+                img.src = `./assets/Chess_${fen[i]}dt45.svg`;
+                r++   
+                
+            } else  {
+                
+                const img = new Image();
+                const x = r; 
+                const y = c;
+                img.onload = function() {
+                    console.log(x*DIMENSION, y* DIMENSION)
+                    ctx.drawImage(img,x*CELL_SIZE, y* CELL_SIZE , CELL_SIZE, CELL_SIZE);
+                }   
+                img.src = `./assets/Chess_${fen[i].toLowerCase()}lt45.svg`;
+                r++;
+            }
+
+
+         }
+         
+       }
+
+
+    drawBoard(canvas);
+    function draw(e) {
+        drawPieces(canvas, document.getElementById("text").value);
+    }
+      
+    //    drawBoard(canvas);
+    //    drawPieces(canvas, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+
+       
+       
+    </script>
+
+</html>

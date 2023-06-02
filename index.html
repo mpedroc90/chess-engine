@@ -57,6 +57,15 @@
                
                
                 const img = new Image();
+                img.setAttribute('draggable' , true);
+                img.onmouseover =  function () {
+                    document.body.style.cursor = 'pointer';
+                };
+                
+                img.onmouseout = function () {
+                  document.body.style.cursor = 'default';
+                };
+                
                 const x = r; 
                 const y = c;
                 img.onload = function() {
@@ -68,6 +77,19 @@
             } else  {
                 
                 const img = new Image();
+                img.setAttribute('draggable' , true);
+                
+                img.onmouseover = function () {
+                    document.body.style.cursor = 'pointer';
+                };
+                img.ondrag = function() {
+                    console.log(x);
+                }
+                
+                img.onmouseout =function () {
+                  document.body.style.cursor = 'default';
+                };
+                
                 const x = r; 
                 const y = c;
                 img.onload = function() {
@@ -83,17 +105,13 @@
          
        }
 
-
     drawBoard(canvas);
     function draw(e) {
         drawPieces(canvas, document.getElementById("text").value);
-    }
-      
-    //    drawBoard(canvas);
-    //    drawPieces(canvas, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-
-       
-       
-    </script>
+    };
+</script>
 
 </html>
+
+
+https://www.youtube.com/watch?v=6dpxrBTESvQ

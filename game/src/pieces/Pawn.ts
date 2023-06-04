@@ -1,8 +1,9 @@
 import { Movement, PieceInFifthRow, PieceInSecondRow , Rule, Game , Color , Cell } from "../index";
-import { Piece, Piece } from "./Piece";
+import { Piece } from "./Piece";
 
 /** Pawn */
 export class Pawn extends Piece {
+    
     constructor(color: Color, position: Cell) { 
         super(
             color,

@@ -7,7 +7,7 @@ const straightMovements = (maxNumberStepsAllowed: number) => generateLinealMovem
 const rookMovements = straightMovements(8)
 
 /** Rook */
-export class Queen extends Piece {
+export class Rook extends Piece {
     constructor(color: Color, position: Cell) { 
         super(color,position, rookMovements);
     }

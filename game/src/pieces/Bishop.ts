@@ -1,5 +1,5 @@
 import { Movement, generateLinealMovements, Color, Cell } from "..";
-import { Piece, Piece } from "./Piece";
+import { Piece } from "./Piece";
  
 
 const diagonalMovements = (maxNumberStepsAllowed: number) => generateLinealMovements(maxNumberStepsAllowed).filter(movement => movement.colummsMovement * movement.colummsMovement !== 0);

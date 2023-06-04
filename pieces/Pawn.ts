@@ -1,12 +1,19 @@
-import { Piece , Movement, PieceInFifthRow, PieceInSecondRow , Rule, Game , Color , Cell } from "../index";
+import { Movement, PieceInFifthRow, PieceInSecondRow , Rule, Game , Color , Cell } from "../index";
+import { Piece, Piece } from "./Piece";
 
 /** Pawn */
-export class Pawn implements Piece {
-    id: string = "P";
-    movements: Movement[] = [SingleStep, PawnDoubleStep, EnPassantLeft, EnPassantRight];
-    canJumpOverPieces: boolean = false;
-    constructor(public color: Color, public position: Cell) { }
+export class Pawn extends Piece {
+    constructor(color: Color, position: Cell) { 
+        super(
+            color,
+            position, 
+            [SingleStep, PawnDoubleStep, EnPassantLeft, EnPassantRight]
+        )
+    }
+    
+    get id():string {return "P" }
 }
+
 
 
 /** Rules */

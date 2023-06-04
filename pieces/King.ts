@@ -1,21 +1,27 @@
-import { Piece, Movement, Color, Cell, Game, KingIsNotInCheck, Rule, generateLinealMovements } from "../index";
+import { Movement, Color, Cell, Game, KingIsNotInCheck, Rule, generateLinealMovements } from "../index";
+import { Piece } from "./Piece";
 
 
 const kingMovements = generateLinealMovements(1)
 
 /** King */
-export class King implements Piece {
-    id: string = "K";
-    movements: Movement[] = [...kingMovements,KingShortCastleMovement, KingLongCastleMovement];
-    canJumpOverPieces: boolean = false;
-    constructor(public color: Color, public position: Cell) { }
+
+export class King1 extends Piece {
+   constructor(color: Color, position: Cell) { 
+        super(
+            color, 
+            position,
+            [...kingMovements,KingShortCastleMovement, KingLongCastleMovement]
+        )
+    }
+
+    get id(): string { return "K" }
 }
 
 
 
 /** Rules */
 const KingHasNotMoved: Rule = ( piece:Piece, game: Game ) => true
-
 
 /** Long Castle */
 const RookAHasNotMoved: Rule = ( piece:Piece, game: Game ) => true

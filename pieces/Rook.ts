@@ -1,4 +1,5 @@
-import { Piece, Movement, Color, Cell, generateLinealMovements } from "../index";
+import {Color, Cell, generateLinealMovements } from "../index";
+import { Piece } from "./Piece";
 
 
 const straightMovements = (maxNumberStepsAllowed: number) => generateLinealMovements(maxNumberStepsAllowed).filter(movement => movement.colummsMovement * movement.colummsMovement === 0);
@@ -6,9 +7,9 @@ const straightMovements = (maxNumberStepsAllowed: number) => generateLinealMovem
 const rookMovements = straightMovements(8)
 
 /** Rook */
-export class Rook implements Piece {
-    id: string = "R";
-    movements: Movement[] = rookMovements;
-    canJumpOverPieces: boolean = false;
-    constructor(public color: Color, public position: Cell) { }
+export class Queen extends Piece {
+    constructor(color: Color, position: Cell) { 
+        super(color,position, rookMovements);
+    }
+    get id():string {return "R" }
 }

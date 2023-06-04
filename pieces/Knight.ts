@@ -1,4 +1,5 @@
-import { Piece, Movement, Color, Cell, generateMovementsGivenMatrix, MovementMatrix } from "../index";
+import { Color, Cell, generateMovementsGivenMatrix, MovementMatrix } from "../index";
+import { Piece } from "./Piece";
 
 /** Represent the kinght movements in the board */
 const kightMovementMatrix: MovementMatrix= [
@@ -17,12 +18,11 @@ const kightMovementMatrix: MovementMatrix= [
 
 
 /** Knight */
-export class Knight implements Piece {
-
-    id: string = "N";
-    movements: Movement[] = kightMovements;
-    canJumpOverPieces: boolean = true;
-    constructor(public color: Color, public position: Cell) { }
+export class Knight extends Piece {
+    constructor(color: Color, position: Cell) { 
+        super(color,position, kightMovements, true)
+    }
+    get id():string {return "N" }
 }
 
 

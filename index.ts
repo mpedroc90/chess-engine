@@ -1,3 +1,5 @@
+import { Piece } from "./pieces/Piece";
+
 export class Game {
     public history: Moved [] = [];
     public board: Board = new Board()
@@ -15,15 +17,6 @@ export class Board {
 export type Cell = {
     row: number,
     column: number
-}
-
-/** Represent a Chess Piece */
-export interface Piece {
-    id: string,
-    color : Color,
-    position : Cell,
-    movements: Movement[]
-    canJumpOverPieces: boolean,
 }
 
 /**

@@ -1,4 +1,5 @@
-import { Color, Cell, Movement } from "../index";
+import { Movement } from "../Movements";
+import { Color, Cell} from "../types";
 
 
 

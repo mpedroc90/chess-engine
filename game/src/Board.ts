@@ -1,5 +1,5 @@
 import { Piece } from "./pieces/Piece";
-import { Cell } from ".";
+import { Cell } from "./types";
 
 /**
  * Represent the board and keep the state of the game.
@@ -30,5 +30,4 @@ export class Board {
     static create(initialPieceConfiguration: Piece[]): Board {
         return new Board(initialPieceConfiguration);
     }
-
 }

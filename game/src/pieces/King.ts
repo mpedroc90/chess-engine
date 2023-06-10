@@ -1,5 +1,7 @@
-import { Movement, Color, Cell, Game, KingIsNotInCheck, Rule, cell } from "../index";
-import { generateLinealMovements } from "../movements_matrix";
+import { Game } from "../Game";
+import { Movement, generateLinealMovements } from "../Movements";
+import { KingIsInCheck } from "../Rules";
+import { Color, Cell, Rule, cell } from "../types";
 import { Piece  } from "./Piece";
 import { Rook } from "./Rook";
 
@@ -116,7 +118,7 @@ export const KingShortCastleMovement: Movement =  {
     rowMovement: 0,
     colummsMovement: 2,
     maxNumberStepsAllowed: 1,
-    rules: [ KingHasNotMoved, RookHHasNotMoved , NoPiecesFromFtoG , NoAttackOnFAndG, KingIsNotInCheck]
+    rules: [ KingHasNotMoved, RookHHasNotMoved , NoPiecesFromFtoG , NoAttackOnFAndG, KingIsInCheck]
 }
 
 
@@ -124,5 +126,5 @@ export const KingLongCastleMovement: Movement =  {
     rowMovement: 0,
     colummsMovement: -2,
     maxNumberStepsAllowed: 1,
-    rules: [LongCastlePiecesHaveNotMoved , NoPiecesFromBtoD , NoAttackFromBndD, KingIsNotInCheck]
+    rules: [LongCastlePiecesHaveNotMoved , NoPiecesFromBtoD , NoAttackFromBndD, KingIsInCheck]
 } 

@@ -1,4 +1,8 @@
-import { Movement, PieceInFifthRow, PieceInSecondRow , Rule, Game , Color , Cell } from "../index";
+
+import { Game } from "../Game";
+import { Movement } from "../Movements";
+import { PieceInFifthRow, PieceInSecondRow } from "../Rules";
+import { Color, Cell, Rule } from "../types";
 import { Piece } from "./Piece";
 
 /** Pawn */

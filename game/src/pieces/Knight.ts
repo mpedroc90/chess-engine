@@ -1,5 +1,5 @@
-import { Color, Cell } from "../index";
-import { MovementMatrix, generateMovementsGivenMatrix } from "../movements_matrix";
+import { Color, Cell } from "../types";
+import { MovementMatrix, generateMovementsGivenMatrix } from "../Movements";
 import { Piece } from "./Piece";
 
 /** Represent the kinght movements in the board */

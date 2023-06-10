@@ -1,4 +1,5 @@
-import { Color, Game, cell } from "../../src/index";
+import { Color, cell } from "../../src/types";
+import { Game } from "../../src/Game";
 import { Bishop, Rook } from "../../src/pieces";
 import { King, KingHasNotMoved, LongCastlePiecesHaveNotMoved, NoPiecesFromBtoD, NoPiecesFromFtoG, RookHasNotMoved, ShortCastlePiecesHaveNotMoved } from "../../src/pieces/King"
 

@@ -1,4 +1,4 @@
-import { Color, Cell, Movement } from "..";
+import { Color, Cell, Movement } from "../index";
 
 
 
@@ -16,8 +16,11 @@ export abstract class Piece {
 
     abstract get id(): string;
 
+    /**
+     * @returns true if the piece has moved, false otherwise.
+     */
     hasMoved(): Boolean {
-        return this._initialPosition;
+        return this._initialPosition === false;
     }
 
     get position(): Cell {
@@ -28,4 +31,7 @@ export abstract class Piece {
         this._initialPosition = false;
         this._position = value;
     }
+
+    isWhite() : boolean  { return this.color == Color.White; }
+    isBlack() : boolean  { return this.color == Color.Black; }
 }

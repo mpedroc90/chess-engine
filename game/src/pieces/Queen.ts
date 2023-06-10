@@ -1,4 +1,5 @@
-import { Color, Cell, generateLinealMovements } from "..";
+import { Color, Cell } from "..";
+import { generateLinealMovements } from "../movements_matrix";
 import { Piece } from "./Piece";
 
 

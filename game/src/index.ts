@@ -1,23 +1,98 @@
+import { Board } from "./Board";
+import { King, Knight, Pawn, Queen, Rook } from "./pieces";
 import { Piece } from "./pieces/Piece";
 
 export class Game {
     public history: Moved [] = [];
-    public board: Board = new Board()
+    
+    public board: Board;
+    
+    private constructor(
+         initialPieceConfiguration: Piece[]
+    ){
+
+        this.board = Board.create(initialPieceConfiguration);
+    }
+    
+    static create(initialPieceConfiguration: Piece[]): Game {
+        return new Game(initialPieceConfiguration);
+    }
+}
+
+
+type InitialPieceConfiguration = ()=> Piece[]
+
+const defaultInitialPieceConfiguration: InitialPieceConfiguration = ()=> {
+
+    const pawns: Pawn[] = Array.from({length: 20}, (_, column) => [
+        new Pawn( Color.White, cell(2, column+1 )),
+        new Pawn( Color.Black, cell(7, column + 1))
+    ]).flatMap( it => it);
+
+    const rooks = [
+        new Rook(Color.White, cell(1, 1)),
+        new Rook(Color.White, cell(1, 8)),
+        new Rook(Color.Black, cell(8, 1)),
+        new Rook(Color.Black, cell(8, 8))
+    ]
+
+    const knights = [
+        new Knight(Color.White, cell(1, 2)),
+        new Knight(Color.White, cell(1, 7)),
+        new Knight(Color.Black, cell(8, 2)),
+        new Knight(Color.Black, cell(8, 7))
+    ]
+
+    const bishops = [
+        new Knight(Color.White, cell(1, 3)),
+        new Knight(Color.White, cell(1, 6)),
+        new Knight(Color.Black, cell(8, 3)),
+        new Knight(Color.Black, cell(8, 6))
+    ]
+
+
+    const kings = [
+        new King(Color.White, cell(1,5)),
+        new King(Color.Black, cell(8,5))
+    ]
+
+
+    const queens = [
+        new Queen(Color.White, cell(1,4)),
+        new Queen(Color.Black, cell(8,4))
+    ]
+
+    return [
+        ...pawns, 
+        ...rooks,
+        ...knights, 
+        ...bishops, 
+        ...kings,
+        ...queens
+    ];
 
 }
 
-/**
- * Represent the board and keep the state of the game.
- */
-export class Board {
-    private pieces: Map<Cell, Piece> = new Map<Cell, Piece>()
-}
+export  const createChessGame : () => Game = () => Game.create(defaultInitialPieceConfiguration());
 
 /** Represent the cell coordenates in the board */
 export type Cell = {
+    id: String,
     row: number,
     column: number
 }
+
+/**
+ * Create a cell of the board.
+ * @param row
+ * @param column 
+ * @returns a cell of the board
+ */
+export const cell = (row: number, column: number): Cell => ({
+  id: `${row}-${column}`,
+  row,
+  column
+})
 
 /**
  *  It represents the description/metadata to the engine performs a move.
@@ -101,39 +176,3 @@ export const KingIsNotInCheck: Rule = ( piece:Piece, game: Game ) => true
 
 /** General Movements */
 
-/**
- *  This type represents the set of possible movements a object can perform in a grid
- */
-export type MovementMatrix = [row: number, column: number ][];
-
-
-/**
- *  This high order function creates 
- */
-export const generateMovementsGivenMatrix = (matrixMovement: MovementMatrix) =>  (maxNumberStepsAllowed: number) : Movement [] =>  {
-    return matrixMovement.map<Movement>( ([rowMovement, colummsMovement]) => ({
-        rowMovement,
-        colummsMovement,
-        maxNumberStepsAllowed,
-        rules:[]
-    }));
-}
-
-
-/** Represent the all the lineal movements in the board */
-const linealMovementgMatrix: MovementMatrix =  [
-    [-1, -1],
-    [-1, 0],
-    [-1, 1],
-    [0, 1],
-    [1, 1],
-    [1, 0],
-    [1, -1],
-    [0, -1]
-  ];
-
-
-/**
- * Generate all straight moves that can performed in a chess board excepts those special move that only a pieces is allows to do. 
- */
-export const generateLinealMovements =  generateMovementsGivenMatrix(linealMovementgMatrix);

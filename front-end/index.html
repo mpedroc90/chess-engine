@@ -1,117 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Document</title>
-</head>
-<body>
-   
-<canvas id="myCanvas"  style="border: solid 1px black;"> 
+  </head>
+  <body>
+    <canvas id="myCanvas" onclick="" style="border: solid 1px black"> </canvas>
 
-</canvas>
+    <div>
+      <lable> FEN </lable><input id="text" type="text" />
+      <button onclick="draw()">Draw</button>
+    </div>
+  </body>
 
-<div>
-    <lable> FEN </lable><input id="text"  type="text"/> <button onclick="draw()">  Draw</button>
-</div>
-
-</body>
-
-    <script src="./dist/src/index.js"  ></script>
-    
-    
-    <script>
-
+  <script>
     // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
-       const DIMENSION = 8; 
-       const CELL_SIZE = 100; 
-       const canvas = document.getElementById("myCanvas");  
-       const ctx = canvas.getContext("2d")
-      
-       function drawBoard(canvas) {
-            canvas.width = DIMENSION*CELL_SIZE;
-            canvas.height = DIMENSION*CELL_SIZE;
-         
+    const DIMENSION = 8;
+    const CELL_SIZE = 100;
+    const canvas = document.getElementById("myCanvas");
+    const ctx = canvas.getContext("2d");
 
-            for(let i = 0; i<DIMENSION ; i++)
-                for(let j = 0; j<DIMENSION ; j++) {
-                    ctx.fillStyle = (i + j) % 2 == 0 ? "white" : "green";
-                    ctx.fillRect(i*CELL_SIZE, j*CELL_SIZE, CELL_SIZE, CELL_SIZE);
-                }
-       }
+    let selected = null;
+    let pieces = new Map();
 
-       function drawPieces(canvas, fen) {
-         let r = 0 ;
-         let c = 0 ;
-         for(let i = 0; i<fen.length ; i++) {
-            if(fen[i] >= '1' && fen[i] <= '9' ) {
-                r += (fen[i] - '0');
-            }
-            else if(fen[i] === '/') {
-                c++;
-                r=0;
-            }
-            else if(fen[i] >= 'a' && fen[i]<='z' ) {
-               
-               
-                const img = new Image();
-                img.setAttribute('draggable' , true);
-                img.onmouseover =  function () {
-                    document.body.style.cursor = 'pointer';
-                };
-                
-                img.onmouseout = function () {
-                  document.body.style.cursor = 'default';
-                };
-                
-                const x = r; 
-                const y = c;
-                img.onload = function() {
-                    ctx.drawImage(img, x*CELL_SIZE, y* CELL_SIZE , CELL_SIZE, CELL_SIZE);
-                }   
-                img.src = `./assets/Chess_${fen[i]}dt45.svg`;
-                r++   
-                
-            } else  {
-                
-                const img = new Image();
-                img.setAttribute('draggable' , true);
-                
-                img.onmouseover = function () {
-                    document.body.style.cursor = 'pointer';
-                };
-                img.ondrag = function() {
-                    console.log(x);
-                }
-                
-                img.onmouseout =function () {
-                  document.body.style.cursor = 'default';
-                };
-                
-                const x = r; 
-                const y = c;
-                img.onload = function() {
-                    console.log(x*DIMENSION, y* DIMENSION)
-                    ctx.drawImage(img,x*CELL_SIZE, y* CELL_SIZE , CELL_SIZE, CELL_SIZE);
-                }   
-                img.src = `./assets/Chess_${fen[i].toLowerCase()}lt45.svg`;
-                r++;
-            }
+    canvas.onclick = function (e) {
+      const cell = detectCell(e.offsetX, e.offsetY);
+      console.log(cell);
+      if (selected === null) {
+        selected = detectCell(e.offsetX, e.offsetY);
+        return;
+      }
+
+      if (cell[2] !== selected[2]) {
+        console.log("move");
+        move(selected, cell);
+      }
+      selected = null;
+    };
+
+    function drawBoard(canvas) {
+      canvas.width = DIMENSION * CELL_SIZE;
+      canvas.height = DIMENSION * CELL_SIZE;
+      for (let i = 0; i < DIMENSION; i++)
+        for (let j = 0; j < DIMENSION; j++) {
+          drawCell(i, j);
+        }
+    }
+
+    function drawCell(r, c) {
+      ctx.clearRect(r * CELL_SIZE, c * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+      ctx.fillStyle = (r + c) % 2 == 0 ? "white" : "green";
+      ctx.fillRect(r * CELL_SIZE, c * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+    }
+
+    function drawPiece(x, y, src) {
+      const img = new Image();
+      img.onload = function () {
+        ctx.drawImage(img, x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+      };
+      img.src = src;
+
+      const cell = detectCell(x * CELL_SIZE, y * CELL_SIZE)
+      pieces.set(cell[2], src);
+    }
+
+    function drawPieces(canvas, fen) {
+      let r = 0;
+      let c = 0;
+      for (let i = 0; i < fen.length; i++) {
+        if (fen[i] >= "1" && fen[i] <= "9") {
+          r += fen[i] - "0";
+        } else if (fen[i] === "/") {
+          c++;
+          r = 0;
+        } else {
+          const pieceSrc =
+            fen[i] >= "a" && fen[i] <= "z"
+              ? `./assets/Chess_${fen[i]}dt45.svg`
+              : `./assets/Chess_${fen[i]}lt45.svg`;
+          drawPiece(r, c, pieceSrc);
+          r++;
+        }
+      }
+    }
+
+    function detectCell(x, y) {
+      return [
+        Math.floor(x / CELL_SIZE),
+        Math.floor(y / CELL_SIZE),
+        `(${Math.floor(x / CELL_SIZE) + 1},${Math.floor(y / CELL_SIZE) + 1})`,
+      ];
+    }
+
+    function move(selected, target) {
+      drawCell(selected[0], selected[1]);
+      drawCell(target[0], target[1]);
+      if(pieces.has(selected[2])) {
+        drawPiece(target[0], target[1], pieces.get(selected[2]));
+      }
+    }
 
 
-         }
-         
-       }
 
     drawBoard(canvas);
-    function draw(e) {
-        drawPieces(canvas, document.getElementById("text").value);
-    };
-</script>
+    drawPieces(canvas, `rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR`);
 
+    // function draw(e) {
+    //     drawPieces(canvas, `rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR`)
+    // // )//document.getElementById("text").value);
+    // };
+  </script>
 </html>
-
-
-https://www.youtube.com/watch?v=6dpxrBTESvQ

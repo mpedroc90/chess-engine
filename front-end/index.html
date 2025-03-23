@@ -16,6 +16,7 @@
     </div>
   </body>
 
+  <script src="../game/"></script>
   <script>
     // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
     const DIMENSION = 8;
@@ -28,17 +29,26 @@
 
     canvas.onclick = function (e) {
       const cell = detectCell(e.offsetX, e.offsetY);
-      console.log(cell);
       if (selected === null) {
-        selected = detectCell(e.offsetX, e.offsetY);
-        return;
+          selectPiece(cell);
+          return;
       }
 
       if (cell[2] !== selected[2]) {
-        console.log("move");
-        move(selected, cell);
+        movePiece(selected, cell);
+        selected = null;
+     
       }
-      selected = null;
+      unselectPiece(cell)
+    };
+
+    canvas.onmousemove = function (e) {
+      const cell = detectCell(e.offsetX, e.offsetY);
+      if (pieces.has(cell[2])) {
+        e.target.style.cursor = "all-scroll";
+      } else {
+        e.target.style.cursor = "default";
+      }
     };
 
     function drawBoard(canvas) {
@@ -46,13 +56,13 @@
       canvas.height = DIMENSION * CELL_SIZE;
       for (let i = 0; i < DIMENSION; i++)
         for (let j = 0; j < DIMENSION; j++) {
-          drawCell(i, j);
+          drawEmptyCell(i, j);
         }
     }
 
-    function drawCell(r, c) {
+    function drawEmptyCell(r, c, color) {
       ctx.clearRect(r * CELL_SIZE, c * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-      ctx.fillStyle = (r + c) % 2 == 0 ? "white" : "green";
+      ctx.fillStyle = !!color ? color : (r + c) % 2 == 0 ? "white" : "green";
       ctx.fillRect(r * CELL_SIZE, c * CELL_SIZE, CELL_SIZE, CELL_SIZE);
     }
 
@@ -63,7 +73,7 @@
       };
       img.src = src;
 
-      const cell = detectCell(x * CELL_SIZE, y * CELL_SIZE)
+      const cell = detectCell(x * CELL_SIZE, y * CELL_SIZE);
       pieces.set(cell[2], src);
     }
 
@@ -86,7 +96,7 @@
         }
       }
     }
-
+    
     function detectCell(x, y) {
       return [
         Math.floor(x / CELL_SIZE),
@@ -95,22 +105,31 @@
       ];
     }
 
-    function move(selected, target) {
-      drawCell(selected[0], selected[1]);
-      drawCell(target[0], target[1]);
-      if(pieces.has(selected[2])) {
-        drawPiece(target[0], target[1], pieces.get(selected[2]));
+    function selectPiece (cell) {
+        selected = cell;
+        if (pieces.has(selected[2])) {
+          drawEmptyCell(selected[0], selected[1], "rgba(166, 245, 39, 0.49)");
+          drawPiece(selected[0], selected[1], pieces.get(selected[2]));
+        }
+    }
+
+    function unselectPiece() {
+        if (pieces.has(selected[2])) {
+          drawEmptyCell(selected[0], selected[1]);
+          drawPiece(selected[0], selected[1], pieces.get(selected[2]));
+        }
+        selected = null;
+    }
+
+    function movePiece(origin, target) {
+      if (pieces.has(origin[2])) {
+        drawEmptyCell(origin[0], origin[1]);
+        drawEmptyCell(target[0],target[1]);
+        drawPiece(target[0], target[1], pieces.get(origin[2]));
       }
     }
 
-
-
     drawBoard(canvas);
     drawPieces(canvas, `rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR`);
-
-    // function draw(e) {
-    //     drawPieces(canvas, `rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR`)
-    // // )//document.getElementById("text").value);
-    // };
   </script>
 </html>
